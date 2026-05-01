@@ -1,18 +1,17 @@
-# ⚡ TaskFlow — Team Task Manager
+Team Task Manager
 
-A full-stack web app for managing projects and tasks with role-based access control (Admin/Member).
+I built TaskFlow as a full-stack web application that lets teams create projects, assign tasks, and track progress — all with role-based access control so admins and members each have the right level of access.
 
-## 🛠 Tech Stack
+Tech Stack
 
-- **Frontend**: React 18, React Router v6, Axios
-- **Backend**: Node.js, Express
-- **Database**: PostgreSQL
-- **Auth**: JWT (bcryptjs)
-- **Deployment**: Railway
+- Frontend: React 18, React Router v6, Axios
+- Backend: Node.js, Express
+- Database: PostgreSQL
+- Auth: JWT (bcryptjs)
+- Deployment: Railway
 
----
 
-## 📁 Project Structure
+Project Structure
 
 ```
 taskmanager/
@@ -33,26 +32,27 @@ taskmanager/
 └── nixpacks.toml
 ```
 
----
+Running Locally
 
-## 🚀 Local Setup
-
-### 1. Clone and install
+1. Clone the repo
 
 ```bash
 git clone <your-repo>
 cd taskmanager
+```
+2. Install dependencies
 
-# Install backend deps
+```bash
+# Backend
 cd backend && npm install && cd ..
 
-# Install frontend deps
+# Frontend
 cd frontend && npm install && cd ..
 ```
 
-### 2. Configure environment
+3. Set up environment variables
 
-**Backend** — create `backend/.env`:
+Create backend/.env:
 ```
 PORT=5000
 DATABASE_URL=postgresql://user:password@localhost:5432/taskmanager
@@ -60,19 +60,19 @@ JWT_SECRET=your_secret_key_here
 NODE_ENV=development
 ```
 
-**Frontend** — create `frontend/.env`:
+Create frontend/.env:
 ```
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
-### 3. Create PostgreSQL database
+4. Create the database
 
 ```bash
 createdb taskmanager
-# Schema is auto-created on first server start
+# The schema (tables) is created automatically on first run — no migrations needed
 ```
 
-### 4. Run
+5. Start the app
 
 ```bash
 # Terminal 1 - Backend
@@ -82,83 +82,75 @@ cd backend && npm run dev
 cd frontend && npm start
 ```
 
-Visit: http://localhost:3000
+Then open http://localhost:3000
 
 ---
 
-## 🌐 Deploying to Railway
+Deployment (Railway)
 
-### Step 1 — Push to GitHub
+I deployed this on Railway with a managed PostgreSQL database. Here's how to do it yourself:
+
 ```bash
 git init
 git add .
-git commit -m "Initial commit"
+git commit -m "initial commit"
 git remote add origin https://github.com/<you>/<repo>.git
 git push -u origin main
 ```
 
-### Step 2 — Create Railway project
-1. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Select your repository
-
-### Step 3 — Add PostgreSQL
-1. In your Railway project → **New** → **Database** → **PostgreSQL**
-2. Railway auto-injects `DATABASE_URL`
-
-### Step 4 — Set environment variables
-In your Railway service settings → Variables:
+1. Go to railway.app, create a New Project and deploy from GitHub, then select your repo
+2. Add a PostgreSQL database via New > Database > PostgreSQL (Railway auto-injects DATABASE_URL)
+3. Add these environment variables in your service settings:
 ```
 JWT_SECRET=your_very_long_secret_key_here
 NODE_ENV=production
 ```
-
-### Step 5 — Deploy!
-Railway builds and deploys automatically. Your app will be live at the generated URL.
+4. Generate a domain under Settings > Networking and you're live!
 
 ---
 
-## 🔐 API Reference
+API Reference
 
-### Auth
+Auth
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/auth/signup` | Register new user |
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Get current user |
+| POST | /api/auth/signup | Register a new user |
+| POST | /api/auth/login | Login |
+| GET | /api/auth/me | Get current user |
 
-### Projects
+Projects
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
-| GET | `/api/projects` | Auth | List user's projects |
-| POST | `/api/projects` | Auth | Create project |
-| GET | `/api/projects/:id` | Member | Get project details |
-| PUT | `/api/projects/:id` | Admin | Update project |
-| DELETE | `/api/projects/:id` | Admin | Delete project |
-| POST | `/api/projects/:id/members` | Admin | Add member |
-| DELETE | `/api/projects/:id/members/:uid` | Admin | Remove member |
+| GET | /api/projects | Auth | List all projects you're part of |
+| POST | /api/projects | Auth | Create a new project |
+| GET | /api/projects/:id | Member | Get project details and members |
+| PUT | /api/projects/:id | Admin | Update project info |
+| DELETE | /api/projects/:id | Admin | Delete project |
+| POST | /api/projects/:id/members | Admin | Add a member by email |
+| DELETE | /api/projects/:id/members/:uid | Admin | Remove a member |
 
-### Tasks
+Tasks
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
-| GET | `/api/projects/:id/tasks` | Member | List tasks |
-| POST | `/api/projects/:id/tasks` | Member | Create task |
-| PUT | `/api/projects/:id/tasks/:tid` | Member | Update task |
-| DELETE | `/api/projects/:id/tasks/:tid` | Admin | Delete task |
+| GET | /api/projects/:id/tasks | Member | List tasks (filterable) |
+| POST | /api/projects/:id/tasks | Member | Create a task |
+| PUT | /api/projects/:id/tasks/:tid | Member | Update a task |
+| DELETE | /api/projects/:id/tasks/:tid | Admin | Delete a task |
 
-### Dashboard
+Dashboard
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/dashboard` | My tasks + stats |
+| GET | /api/dashboard | Get your assigned tasks and stats |
 
 ---
 
-## ✨ Features
+Features I Built
 
-- 🔐 JWT Authentication (Signup / Login)
-- 👥 Role-based access: **Admin** (full control) / **Member** (view & edit tasks)
-- 📁 Project management with team members
-- ✅ Task creation with status, priority, assignee, due date
-- 📊 Kanban board + list view
-- 📈 Dashboard with stats (total, completed, open, overdue)
-- ⚠️ Overdue task detection
-- 📱 Responsive design
+- JWT Authentication — secure signup and login with hashed passwords
+- Role-based access — Admins can manage members and delete tasks; Members can create and update tasks
+- Project management — create projects, invite team members by email, assign roles
+- Task tracking — set status (To Do / In Progress / Done), priority, assignee, and due date
+- Kanban board and List view — switch between views depending on how you like to work
+- Dashboard — see all your assigned tasks and a summary of open, completed, and overdue items
+- Overdue detection — tasks past their due date are automatically flagged
+- Responsive design — works on mobile and desktop
